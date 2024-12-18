@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucky Draw</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #fef9e7; /* Soft pastel yellow */
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    h1 {
+      font-size: 3.5em;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.2em;
+      color: #34495e;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 1.5em;
+      color: white;
+      background-color: #ff6f61;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    button:hover {
+      background-color: #ff4c4c;
+      transform: scale(1.05);
+    }
+    .result-message {
+      font-size: 1.5em;
+      color: #333;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .affection-message {
+      font-size: 1.5em;
+      color: #555;
+      margin-top: 20px;
+      font-style: italic;
+    }
+    .loading {
+      font-size: 1.5em;
+      color: #e67e22;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lucky Draw</h1>
+  <p>Click the button below to try your luck!</p>
+  <button id="luckyDrawBtn">Try Your Luck</button>
+  <p id="result" class="result-message"></p>
+  <p id="affectionMessage" class="affection-message" style="display: none;"></p>
+  <p id="loading" class="loading" style="display: none;">Loading...</p>
+  
+  <script>
+    // Reset winners every time the page loads
+    localStorage.removeItem("winners");
+    localStorage.removeItem("hasClicked");
+
+    // Get references to elements
+    const luckyDrawBtn = document.getElementById("luckyDrawBtn");
+    const result = document.getElementById("result");
+    const affectionMessage = document.getElementById("affectionMessage");
+    const loading = document.getElementById("loading");
+
+    // Track winners and affection messages
+    let winners = { first: 0, second: 0, third: 0 };
+
+    const prizes = [
+      "🎉 Congratulations! You won the 1st prize: Rain Perfume!",
+      "🎉 Congratulations! You won the 2nd prize: Black Opium Perfume!",
+      "🎉 Congratulations! You won the 3rd prize: Rose Perfume!"
+    ];
+
+    const affectionMessages = [
+      "🌟 You're already a winner in my eyes! 💖",
+      "✨ Keep shining, you're doing amazing! 🌸",
+      "💪 Don't give up! You're closer to greatness than you think. 🌟",
+      "💖 Remember, you're loved and appreciated just for being you. 🌈",
+      "🌸 Life's a journey, and you're making it beautiful. 🌟",
+      "🤗 Hey, you're pretty awesome. Don't forget that! 💕",
+      "🌟 The universe is rooting for you, superstar! 🌈"
+    ];
+
+    // Debugging: Log initial state of winners
+    console.log("Initial winners state:", winners);
+
+    // Add event listener for the lucky draw button
+    luckyDrawBtn.addEventListener("click", () => {
+      // Display loading text while the result is being processed
+      loading.style.display = "block";
+      result.style.display = "none";
+      affectionMessage.style.display = "none";
+
+      // Set a delay to simulate loading
+      setTimeout(() => {
+        let randomResult;
+
+        // Debugging: Log current state of winners before assigning a prize
+        console.log("Current winners state before assigning prize:", winners);
+
+        // Check if there are still prizes left
+        if (winners.first < 1) {
+          console.log("Assigning 1st prize");
+          randomResult = prizes[0]; // 1st prize
+          winners.first++;
+        } else if (winners.second < 1) {
+          console.log("Assigning 2nd prize");
+          randomResult = prizes[1]; // 2nd prize
+          winners.second++;
+        } else if (winners.third < 1) {
+          console.log("Assigning 3rd prize");
+          randomResult = prizes[2]; // 3rd prize
+          winners.third++;
+        } else {
+          // No more prizes, give a random affectionate message
+          console.log("All prizes claimed. Assigning affection message.");
+          randomResult = null;
+          const randomAffection = affectionMessages[Math.floor(Math.random() * affectionMessages.length)];
+          affectionMessage.textContent = randomAffection;
+          affectionMessage.style.display = "block";
+        }
+
+        // Update result text or affection message and hide loading message
+        if (randomResult) {
+          result.textContent = randomResult;
+          result.style.display = "block";
+        }
+        loading.style.display = "none";
+
+        // Debugging: Log updated winners state
+        console.log("Updated winners state:", winners);
+      }, 2000); // Simulate 2-second loading time
+    });
+  </script>
+</body>
+</html>
